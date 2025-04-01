@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="h3 mb-0">Edit Profile</h1>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+                        <div class="mb-3">
+                            {{ form_label(form.username, 'Username', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.username, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.username) }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form_label(form.bio, 'About Me', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.bio, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.bio) }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form_label(form.profilePictureFile, 'Profile Picture', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.profilePictureFile, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.profilePictureFile) }}
+                            
+                            <small class="form-text text-muted">
+                                Upload a new profile picture. JPG or PNG, max size 1MB.
+                            </small>
+                            
+                            {% if app.user.profilePicture %}
+                                <div class="mt-2">
+                                    <img src="{{ app.user.profilePictureUrl }}" alt="Current profile picture" class="img-thumbnail" style="max-height: 100px;">
+                                    <p class="small text-muted">Current profile picture</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <a href="{{ path('app_profile_show', {'id': app.user.id}) }}" class="btn btn-link">Cancel</a>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

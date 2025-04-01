@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ user.username }}'s Profile{% endblock %}
+
+{% block body %}
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="text-center pt-3">
+                    <img src="{{ user.profilePictureUrl }}" alt="{{ user.username }}" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
+                </div>
+                <div class="card-body text-center">
+                    <h3 class="card-title">{{ user.username }}</h3>
+                    {% if user.bio %}
+                        <p class="card-text">{{ user.bio }}</p>
+                    {% endif %}
+                    <p class="text-muted">Member since {{ user.createdAt|date('F j, Y') }}</p>
+                    
+                    {% if app.user and app.user.id == user.id %}
+                        <a href="{{ path('app_profile_edit') }}" class="btn btn-primary">Edit Profile</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Recent Posts</h4>
+                </div>
+                <div class="card-body">
+                    {% if posts|length > 0 %}
+                        <div class="list-group">
+                            {% for post in posts %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">
+                                            <a href="{{ path('app_topic_show', {'id': post.topic.id}) }}">
+                                                {{ post.topic.title }}
+                                            </a>
+                                        </h5>
+                                        <small>{{ post.createdAt|date('M j, Y g:i a') }}</small>
+                                    </div>
+                                    <p class="mb-1">{{ post.content|striptags|slice(0, 150) }}{% if post.content|length > 150 %}...{% endif %}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>No posts yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

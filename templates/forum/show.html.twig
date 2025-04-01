@@ -1,0 +1,65 @@
+{# templates/forum/show.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ forum.name }}{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_forum_index') }}">Forums</a></li>
+            <li class="breadcrumb-item active">{{ forum.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>{{ forum.name }}</h1>
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <a href="{{ path('app_topic_new', {'forum_id': forum.id}) }}" class="btn btn-primary">Create new topic</a>
+        {% endif %}
+    </div>
+
+    {% if forum.description %}
+        <div class="card mb-4">
+            <div class="card-body">
+                {{ forum.description }}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="list-group">
+        {% for topic in forum.topics %}
+            <div class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">
+                        <a href="{{ path('app_topic_show', {'id': topic.id}) }}" class="text-decoration-none">
+                            {{ topic.title }}
+                        </a>
+                    </h5>
+                    <small>{{ topic.posts|length }} posts</small>
+                </div>
+                <p class="mb-1">
+                    Started by {{ topic.author.username }} on {{ topic.createdAt|date('F j, Y, g:i a') }}
+                </p>
+                {% if is_granted('ROLE_ADMIN') or (is_granted('IS_AUTHENTICATED_FULLY') and app.user == topic.author) %}
+                    <div class="mt-2">
+                        <a href="{{ path('app_topic_edit', {'id': topic.id}) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                        <form method="post" action="{{ path('app_topic_delete', {'id': topic.id}) }}" style="display:inline" onsubmit="return confirm('Are you sure you want to delete this topic?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ topic.id) }}">
+                            <button class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="list-group-item">
+                <p class="mb-0">No topics found in this forum. 
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    Be the first to start a discussion!
+                {% else %}
+                    <a href="{{ path('app_login') }}">Login</a> to start a discussion.
+                {% endif %}
+                </p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

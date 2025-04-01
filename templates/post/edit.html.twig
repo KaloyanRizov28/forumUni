@@ -1,0 +1,15 @@
+{# templates/post/edit.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Post{% endblock %}
+
+{% block body %}
+    <h1>Edit Post</h1>
+
+    {{ form_start(form) }}
+        {{ form_row(form.content, {'attr': {'class': 'form-control', 'rows': 10}}) }}
+        <button class="btn btn-primary mt-3">Save</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('app_topic_show', {'id': post.topic.id}) }}" class="btn btn-link mt-3">Back to topic</a>
+{% endblock %}

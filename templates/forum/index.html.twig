@@ -1,0 +1,44 @@
+{# templates/forum/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Forums{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Forums</h1>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_forum_new') }}" class="btn btn-primary">Create new forum</a>
+        {% endif %}
+    </div>
+
+    <div class="list-group">
+        {% for forum in forums %}
+            <div class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">
+                        <a href="{{ path('app_forum_show', {'id': forum.id}) }}" class="text-decoration-none">
+                            {{ forum.name }}
+                        </a>
+                    </h5>
+                    <small>{{ forum.topics|length }} topics</small>
+                </div>
+                {% if forum.description %}
+                    <p class="mb-1">{{ forum.description }}</p>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <div class="mt-2">
+                        <a href="{{ path('app_forum_edit', {'id': forum.id}) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                        <form method="post" action="{{ path('app_forum_delete', {'id': forum.id}) }}" style="display:inline" onsubmit="return confirm('Are you sure you want to delete this forum?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ forum.id) }}">
+                            <button class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="list-group-item">
+                <p class="mb-0">No forums found. {% if is_granted('ROLE_ADMIN') %}Create the first one!{% endif %}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

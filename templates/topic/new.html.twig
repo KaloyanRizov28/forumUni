@@ -1,0 +1,24 @@
+{# templates/topic/new.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}New Topic{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_forum_index') }}">Forums</a></li>
+            <li class="breadcrumb-item"><a href="{{ path('app_forum_show', {'id': forum.id}) }}">{{ forum.name }}</a></li>
+            <li class="breadcrumb-item active">New Topic</li>
+        </ol>
+    </nav>
+
+    <h1>Create a new Topic</h1>
+
+    {{ form_start(form) }}
+        {{ form_row(form.title, {'attr': {'class': 'form-control'}}) }}
+        {{ form_row(form.content, {'attr': {'class': 'form-control', 'rows': 10}}) }}
+        <button class="btn btn-primary mt-3">Create Topic</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('app_forum_show', {'id': forum.id}) }}" class="btn btn-link mt-3">Back to forum</a>
+{% endblock %}

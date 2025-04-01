@@ -1,0 +1,16 @@
+{# templates/forum/new.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}New Forum{% endblock %}
+
+{% block body %}
+    <h1>Create a new Forum</h1>
+
+    {{ form_start(form) }}
+        {{ form_row(form.name, {'attr': {'class': 'form-control'}}) }}
+        {{ form_row(form.description, {'attr': {'class': 'form-control'}}) }}
+        <button class="btn btn-primary mt-3">Create</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('app_forum_index') }}" class="btn btn-link mt-3">Back to list</a>
+{% endblock %}
