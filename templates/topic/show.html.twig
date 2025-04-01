@@ -19,7 +19,10 @@
             <div class="card mb-4" id="post-{{ post.id }}">
                 <div class="card-header d-flex justify-content-between">
                     <div>
-                        <strong>{{ post.author.username }}</strong>
+                        <img src="{{ post.author.profilePictureUrl }}" alt="{{ post.author.username }}'s profile" class="profile-img" width="40" height="40" style="border-radius: 50%;">
+                         <a href="{{ path('app_profile_show', {'id': post.author.id}) }}">
+        <strong>{{ post.author.username }}</strong>
+            </a>
                         <span class="text-muted">Posted on {{ post.createdAt|date('F j, Y, g:i a') }}</span>
                     </div>
                     {% if is_granted('ROLE_ADMIN') or (is_granted('IS_AUTHENTICATED_FULLY') and app.user == post.author) %}
@@ -31,6 +34,16 @@
                             </form>
                         </div>
                     {% endif %}
+                    <div class="likes">
+                    {{ post.likes|length }} likes
+                        <a href="{{ path('app_post_like', {'id': post.id}) }}" class="btn btn-sm btn-outline-primary">
+                            {% if app.user and post.isLikedByUser(app.user) %}
+                                Unlike
+                            {% else %}
+                                Like
+                            {% endif %}
+                        </a>
+                </div>
                 </div>
                 <div class="card-body">
                     {{ post.content|nl2br }}

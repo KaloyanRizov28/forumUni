@@ -63,6 +63,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->topics = new ArrayCollection();
         $this->posts = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
+        $this->LikedPosts = new ArrayCollection();
         
     }
 
@@ -240,6 +241,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $createdAt = null;
+
+    /**
+     * @var Collection<int, Post>
+     */
+    #[ORM\ManyToMany(targetEntity: Post::class, mappedBy: 'likes')]
+    private Collection $LikedPosts;
     
     // Getter and setter for the new property
     public function getProfilePictureFile(): ?File
@@ -272,6 +279,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Post>
+     */
+    public function getLikedPosts(): Collection
+    {
+        return $this->LikedPosts;
+    }
+
+    public function addLikedPost(Post $likedPost): static
+    {
+        if (!$this->LikedPosts->contains($likedPost)) {
+            $this->LikedPosts->add($likedPost);
+            $likedPost->addLike($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLikedPost(Post $likedPost): static
+    {
+        if ($this->LikedPosts->removeElement($likedPost)) {
+            $likedPost->removeLike($this);
+        }
 
         return $this;
     }

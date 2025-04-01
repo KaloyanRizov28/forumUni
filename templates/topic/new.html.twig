@@ -19,6 +19,5 @@
         {{ form_row(form.content, {'attr': {'class': 'form-control', 'rows': 10}}) }}
         <button class="btn btn-primary mt-3">Create Topic</button>
     {{ form_end(form) }}
-
     <a href="{{ path('app_forum_show', {'id': forum.id}) }}" class="btn btn-link mt-3">Back to forum</a>
 {% endblock %}
