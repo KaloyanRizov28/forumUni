@@ -1,8 +1,6 @@
 security:
     session_fixation_strategy: 'migrate'
-    csrf_protection:
-        enabled: true
-        field_name: '_csrf_token'
+    
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
