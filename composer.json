@@ -7,6 +7,7 @@
         "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ext-pdo_pgsql": "*",
         "doctrine/dbal": "^3",
         "doctrine/doctrine-bundle": "^2.14",
         "doctrine/doctrine-migrations-bundle": "^3.4",
@@ -87,7 +88,9 @@
             "@auto-scripts"
         ],
         "compile": [
-            "php bin/console doctrine:migrations:migrate --no-interaction"
+            "composer dump-env prod",
+            "php bin/console cache:clear --env=prod --no-debug",
+            "php bin/console doctrine:migrations:migrate --no-interaction --env=prod"
         ]
     },
     "conflict": {
