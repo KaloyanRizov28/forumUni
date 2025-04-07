@@ -76,7 +76,7 @@
     },
     "scripts": {
         "auto-scripts": {
-            "cache:clear": "symfony-cmd",
+            "cache:clear --env=prod": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
             "importmap:install": "symfony-cmd"
         },
