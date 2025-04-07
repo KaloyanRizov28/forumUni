@@ -1,0 +1,10 @@
+services:
+    # Database session storage
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
+        arguments:
+            - !service { class: PDO, factory: ['@doctrine.dbal.default_connection', 'getNativeConnection'] }
+            - { lock_mode: 1 }
+
+framework:
+    session:
+        handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
