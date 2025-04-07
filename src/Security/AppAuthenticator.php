@@ -38,7 +38,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
         new UserBadge($email),
         new PasswordCredentials($request->getPayload()->getString('password')),
         [
-            new CsrfTokenBadge('authenticate', $csrfToken),
+            new CsrfTokenBadge('main', $request->getPayload()->getString('_csrf_token')),
         ]
     );
 }
