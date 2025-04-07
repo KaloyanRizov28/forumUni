@@ -26,18 +26,22 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
     }
 
     public function authenticate(Request $request): Passport
-    {
-        $email = $request->getPayload()->getString('email');
+{
+    $email = $request->getPayload()->getString('email');
+    $csrfToken = $request->getPayload()->getString('_csrf_token', '');
+    
+    // Add logging or debugging
+    error_log("CSRF Token received: " . $csrfToken);
+    error_log("Email: " . $email);
 
-        $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
-
-        return new Passport(
-            new UserBadge($email),
-            new PasswordCredentials($request->getPayload()->getString('password')),
-            [
-                new CsrfTokenBadge('authenticate', $request->getPayload()->getString('_csrf_token')),            ]
-        );
-    }
+    return new Passport(
+        new UserBadge($email),
+        new PasswordCredentials($request->getPayload()->getString('password')),
+        [
+            new CsrfTokenBadge('authenticate', $csrfToken),
+        ]
+    );
+}
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
