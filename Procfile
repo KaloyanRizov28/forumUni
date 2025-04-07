@@ -1,1 +1,1 @@
-web: heroku-php-apache2 public/
+web: APP_ENV=prod APP_DEBUG=0 heroku-php-apache2 public/
