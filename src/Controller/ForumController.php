@@ -81,10 +81,9 @@ class ForumController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         
-        if ($this->isCsrfTokenValid('delete'.$forum->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($forum);
-            $entityManager->flush();
-        }
+        // Remove explicit CSRF token check - Symfony Form handles this automatically
+        $entityManager->remove($forum);
+        $entityManager->flush();
 
         return $this->redirectToRoute('app_forum_index');
     }

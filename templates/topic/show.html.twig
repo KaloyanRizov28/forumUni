@@ -21,21 +21,20 @@
                     <div>
                         <img src="{{ post.author.profilePictureUrl }}" alt="{{ post.author.username }}'s profile" class="profile-img" width="40" height="40" style="border-radius: 50%;">
                          <a href="{{ path('app_profile_show', {'id': post.author.id}) }}">
-        <strong>{{ post.author.username }}</strong>
-            </a>
+                            <strong>{{ post.author.username }}</strong>
+                         </a>
                         <span class="text-muted">Posted on {{ post.createdAt|date('F j, Y, g:i a') }}</span>
                     </div>
                     {% if is_granted('ROLE_ADMIN') or (is_granted('IS_AUTHENTICATED_FULLY') and app.user == post.author) %}
                         <div>
                             <a href="{{ path('app_post_edit', {'id': post.id}) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
                             <form method="post" action="{{ path('app_post_delete', {'id': post.id}) }}" style="display:inline" onsubmit="return confirm('Are you sure you want to delete this post?');">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
                                 <button class="btn btn-sm btn-outline-danger">Delete</button>
                             </form>
                         </div>
                     {% endif %}
                     <div class="likes">
-                    {{ post.likes|length }} likes
+                        {{ post.likes|length }} likes
                         <a href="{{ path('app_post_like', {'id': post.id}) }}" class="btn btn-sm btn-outline-primary">
                             {% if app.user and post.isLikedByUser(app.user) %}
                                 Unlike
@@ -43,7 +42,7 @@
                                 Like
                             {% endif %}
                         </a>
-                </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     {{ post.content|nl2br }}

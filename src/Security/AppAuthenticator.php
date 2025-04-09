@@ -12,7 +12,6 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
-use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class AppAuthenticator extends AbstractLoginFormAuthenticator
@@ -26,22 +25,18 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
     }
 
     public function authenticate(Request $request): Passport
-{
-    $email = $request->getPayload()->getString('email');
-    $csrfToken = $request->getPayload()->getString('_csrf_token', '');
-    
-    // Add logging or debugging
-    error_log("CSRF Token received: " . $csrfToken);
-    error_log("Email: " . $email);
-
-    return new Passport(
-        new UserBadge($email),
-        new PasswordCredentials($request->getPayload()->getString('password')),
-        [
-            new CsrfTokenBadge('main', $request->getPayload()->getString('_csrf_token')),
-        ]
-    );
-}
+    {
+        $email = $request->getPayload()->getString('email');
+        
+        
+        return new Passport(
+            new UserBadge($email),
+            new PasswordCredentials($request->getPayload()->getString('password')),
+            [
+                new CsrfTokenBadge('authenticate', $request->getPayload()->getString('_csrf_token')),
+            ]
+        );
+    }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {

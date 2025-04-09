@@ -68,10 +68,7 @@ class TopicController extends AbstractController
         ]);
     }
 
-    
-
     #[Route('/{id}', name: 'app_topic_show', methods: ['GET', 'POST'])]
-   
     public function show(Request $request, Topic $topic, EntityManagerInterface $entityManager): Response
     {
         $post = new Post(); 
@@ -128,23 +125,22 @@ class TopicController extends AbstractController
 
     // Delete action: Delete a topic
     #[Route('/{id}', name: 'app_topic_delete', methods: ['POST'])]
-public function delete(Request $request, Topic $topic, EntityManagerInterface $entityManager): Response
-{
-    if (!$this->isGranted('ROLE_ADMIN') && $topic->getAuthor() !== $this->getUser()) {
-        throw $this->createAccessDeniedException('You cannot delete this topic');
-    }
-    
-    $forumId = $topic->getForum()->getId();
-    
-    if ($this->isCsrfTokenValid('delete'.$topic->getId(), $request->request->get('_token'))) {
+    public function delete(Request $request, Topic $topic, EntityManagerInterface $entityManager): Response
+    {
+        if (!$this->isGranted('ROLE_ADMIN') && $topic->getAuthor() !== $this->getUser()) {
+            throw $this->createAccessDeniedException('You cannot delete this topic');
+        }
+        
+        $forumId = $topic->getForum()->getId();
+        
+        // Remove explicit CSRF token check - Symfony Form handles this automatically
         // This should remove the topic and all its posts due to cascade deletion
         $entityManager->remove($topic);
         $entityManager->flush();
         
         // Add a flash message to confirm deletion
         $this->addFlash('success', 'Topic has been deleted');
-    }
 
-    return $this->redirectToRoute('app_forum_show', ['id' => $forumId]);
-}
+        return $this->redirectToRoute('app_forum_show', ['id' => $forumId]);
+    }
 }

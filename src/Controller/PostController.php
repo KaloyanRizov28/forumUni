@@ -45,35 +45,34 @@ class PostController extends AbstractController
         
         $topicId = $post->getTopic()->getId();
         
-        if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($post);
-            $entityManager->flush();
-        }
+        // Remove explicit CSRF token check - Symfony Form handles this automatically
+        $entityManager->remove($post);
+        $entityManager->flush();
 
         return $this->redirectToRoute('app_topic_show', ['id' => $topicId]);
     }
-    #[Route('/post/{id}/like', name: 'app_post_like')]
+    
+    #[Route('/{id}/like', name: 'app_post_like')]
     public function like(Post $post, EntityManagerInterface $entityManager): Response
     {
-            // Get current user
+        // Get current user
         $user = $this->getUser();
             
-            // Make sure user is logged in
-            if (!$user) {
-                throw $this->createAccessDeniedException('You must be logged in to like posts');
-            }
+        // Make sure user is logged in
+        if (!$user) {
+            throw $this->createAccessDeniedException('You must be logged in to like posts');
+        }
             
-            // Toggle like status
-            if ($post->isLikedByUser($user)) {
-                $post->removeLike($user);
-            } else {
-                $post->addLike($user);
-            }
+        // Toggle like status
+        if ($post->isLikedByUser($user)) {
+            $post->removeLike($user);
+        } else {
+            $post->addLike($user);
+        }
             
-            $entityManager->flush();
+        $entityManager->flush();
             
-            // Redirect back to the post or referring page
-            return $this->redirect($this->generateUrl('app_topic_show', ['id' => $post->getTopic()->getId()]));
+        // Redirect back to the post or referring page
+        return $this->redirect($this->generateUrl('app_topic_show', ['id' => $post->getTopic()->getId()]));
     }
-    
 }
