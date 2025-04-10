@@ -10,8 +10,11 @@ framework:
             field_name: 'custom_token_name'
     session:
         enabled: true
-        cookie_secure:  true
-        cookie_samesite: lax
+        storage_factory_id: 'session.storage.factory.native'
+        cookie_secure: true          # Forces cookies to be sent only over HTTPS
+        cookie_samesite: 'lax'       # Controls cross-site cookie behavior
+        cookie_httponly: true  
+
 
     #esi: true
     #fragments: true
